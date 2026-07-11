@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohammad Altonji — Backend Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1110;
+    --bg-raised:#101816;
+    --bg-card:#0F1614;
+    --ink:#EDEFEA;
+    --muted:#8FA39B;
+    --line:#1E2B27;
+    --amber:#FF9447;
+    --teal:#5FE3C8;
+    --teal-dim:#3A8C7C;
+    --red-flag:#FF6B57;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Sora', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--amber); color:#0B1110;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+
+  /* background grid texture */
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.25;
+    pointer-events:none;
+    z-index:0;
+    mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  .wrap{max-width:1040px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(11,17,16,.78);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .brand{font-family:'IBM Plex Mono'; font-weight:600; font-size:15px; letter-spacing:.02em;}
+  .brand .dot{color:var(--teal);}
+  .navlinks{display:flex; gap:28px; font-family:'IBM Plex Mono'; font-size:13px; color:var(--muted);}
+  .navlinks a{transition:color .2s;}
+  .navlinks a:hover{color:var(--teal);}
+  .navlinks .num{color:var(--teal-dim); margin-right:4px;}
+  .nav-cta{
+    font-family:'IBM Plex Mono'; font-size:13px; color:var(--bg);
+    background:var(--teal); padding:8px 16px; border-radius:3px; font-weight:600;
+    border:1px solid var(--teal);
+    transition:background .2s, color .2s;
+  }
+  .nav-cta:hover{background:transparent; color:var(--teal);}
+  @media(max-width:760px){ .navlinks{display:none;} }
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:96px 0 60px; position:relative;}
+  .eyebrow{
+    font-family:'IBM Plex Mono'; font-size:13px; color:var(--teal);
+    display:flex; align-items:center; gap:10px; margin-bottom:28px;
+  }
+  .eyebrow .cursor{
+    width:8px; height:14px; background:var(--teal);
+    animation:blink 1.1s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .terminal{
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.6);
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    background:#0D1513;
+  }
+  .term-dot{width:9px; height:9px; border-radius:50%; background:#2A3733;}
+  .term-bar span.label{
+    margin-left:8px; font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--muted);
+  }
+  .term-body{padding:26px 28px 30px; font-family:'IBM Plex Mono'; font-size:14.5px;}
+  .term-body .line{margin-bottom:6px; color:var(--muted);}
+  .term-body .prompt{color:var(--teal-dim);}
+  .typed-name{
+    font-family:'Sora', sans-serif;
+    font-weight:800;
+    font-size:clamp(38px, 6vw, 64px);
+    line-height:1.04;
+    margin:14px 0 18px;
+    letter-spacing:-.02em;
+    color:var(--ink);
+  }
+  .typed-name .accent{color:var(--amber);}
+  .lede{
+    font-size:17px; color:var(--muted); max-width:560px; margin-bottom:26px;
+  }
+  .lede strong{color:var(--ink); font-weight:600;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; padding-top:6px;}
+  .btn{
+    font-family:'IBM Plex Mono'; font-size:13.5px; font-weight:600;
+    padding:12px 20px; border-radius:4px; border:1px solid var(--line);
+    display:inline-flex; align-items:center; gap:8px; transition:all .2s;
+  }
+  .btn-primary{background:var(--amber); color:#1A0E04; border-color:var(--amber);}
+  .btn-primary:hover{background:transparent; color:var(--amber);}
+  .btn-ghost{color:var(--ink); border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--teal); color:var(--teal);}
+
+  .hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:start;}
+  @media(max-width:880px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .stat-stack{display:flex; flex-direction:column; gap:14px;}
+  .stat-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:8px;
+    padding:18px 20px;
+  }
+  .stat-card .k{font-family:'IBM Plex Mono'; font-size:30px; font-weight:700; color:var(--teal);}
+  .stat-card .k small{font-size:15px; color:var(--muted); font-weight:500;}
+  .stat-card .d{font-size:13.5px; color:var(--muted); margin-top:4px;}
+
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:88px 0; border-top:1px solid var(--line); position:relative;}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:44px;}
+  .sec-tag{font-family:'IBM Plex Mono'; font-size:13px; color:var(--teal-dim);}
+  .sec-title{font-size:clamp(26px,3.4vw,36px); font-weight:800; letter-spacing:-.01em;}
+
+  /* ---------- LOG / EXPERIENCE ---------- */
+  .log{position:relative; padding-left:26px;}
+  .log::before{
+    content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px;
+    background:linear-gradient(var(--teal-dim), transparent);
+  }
+  .entry{position:relative; padding-bottom:46px;}
+  .entry:last-child{padding-bottom:0;}
+  .entry::before{
+    content:''; position:absolute; left:-26px; top:6px; width:11px; height:11px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--teal);
+  }
+  .entry-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:10px;}
+  .entry-time{font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--muted); background:var(--bg-card); border:1px solid var(--line); padding:3px 8px; border-radius:3px;}
+  .entry-role{font-size:19px; font-weight:700;}
+  .entry-org{font-family:'IBM Plex Mono'; font-size:13.5px; color:var(--amber);}
+  .entry-loc{font-size:13px; color:var(--muted);}
+  .entry ul{list-style:none; margin-top:12px; display:flex; flex-direction:column; gap:9px;}
+  .entry li{font-size:14.5px; color:#C7D2CC; padding-left:20px; position:relative;}
+  .entry li::before{
+    content:'›'; position:absolute; left:0; top:-1px; color:var(--teal-dim); font-family:'IBM Plex Mono'; font-weight:700;
+  }
+
+  /* ---------- STACK / SKILLS ---------- */
+  .stack-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden;}
+  @media(max-width:680px){ .stack-grid{grid-template-columns:1fr;} }
+  .stack-cell{background:var(--bg-card); padding:26px 28px;}
+  .stack-cell h4{font-family:'IBM Plex Mono'; font-size:12.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--teal); margin-bottom:14px;}
+  .pillrow{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{
+    font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--muted);
+    border:1px solid var(--line); padding:6px 11px; border-radius:20px;
+    transition:.2s;
+  }
+  .pill:hover{color:var(--ink); border-color:var(--teal-dim);}
+
+  /* ---------- PROJECTS / FOCUS AREAS ---------- */
+  .focus-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media(max-width:880px){ .focus-grid{grid-template-columns:1fr;} }
+  .focus-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:10px;
+    padding:26px 24px; transition:border-color .25s, transform .25s;
+  }
+  .focus-card:hover{border-color:var(--teal-dim); transform:translateY(-3px);}
+  .focus-card .ic{
+    width:38px; height:38px; border-radius:8px; background:rgba(95,227,200,.08);
+    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+    border:1px solid var(--line);
+  }
+  .focus-card h4{font-size:16.5px; font-weight:700; margin-bottom:8px;}
+  .focus-card p{font-size:13.8px; color:var(--muted);}
+
+  /* ---------- EDUCATION/TRAINING ---------- */
+  .edu-row{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    padding:18px 0; border-bottom:1px solid var(--line);
+  }
+  .edu-row:last-child{border-bottom:none;}
+  .edu-title{font-weight:700; font-size:15.5px;}
+  .edu-sub{font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--muted); margin-top:3px;}
+  .edu-time{font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--teal-dim); white-space:nowrap;}
+
+  /* ---------- CONTACT ---------- */
+  .contact-box{
+    background:var(--bg-raised); border:1px solid var(--line); border-radius:12px;
+    padding:56px 44px; text-align:center; position:relative; overflow:hidden;
+  }
+  .contact-box::after{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 50% 0%, rgba(255,148,71,.10), transparent 60%);
+    pointer-events:none;
+  }
+  .contact-box h2{font-size:clamp(26px,4vw,38px); font-weight:800; margin-bottom:14px;}
+  .contact-box p{color:var(--muted); max-width:480px; margin:0 auto 30px; font-size:15px;}
+  .contact-links{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+  footer{padding:30px 0 50px; text-align:center; font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--muted);}
+
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--teal); outline-offset:3px; border-radius:3px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">m_altonji<span class="dot">.</span>dev</div>
+    <div class="navlinks">
+      <a href="#log"><span class="num">01</span>experience</a>
+      <a href="#stack"><span class="num">02</span>stack</a>
+      <a href="#focus"><span class="num">03</span>focus</a>
+      <a href="#education"><span class="num">04</span>education</a>
+    </div>
+    <a class="nav-cta" href="mailto:mouhammadaltonji@gmail.com">Hire me</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">~/portfolio main<span class="cursor"></span></div>
+        <div class="terminal reveal">
+          <div class="term-bar">
+            <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
+            <span class="label">whoami.sh — Damascus, Syria</span>
+          </div>
+          <div class="term-body">
+            <div class="line"><span class="prompt">$</span> whoami</div>
+            <h1 class="typed-name">Mohammad Altonji<br><span class="accent">Backend Engineer.</span></h1>
+            <p class="lede">I build <strong>scalable APIs</strong> and <strong>production infrastructure</strong> — Django/DRF systems that hold up under real traffic, search engines tuned for speed, and deployments that don't keep anyone up at night. <strong>3+ years</strong> shipping backend systems for healthcare, tourism, and education platforms.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="mailto:mouhammadaltonji@gmail.com">mouhammadaltonji@gmail.com</a>
+              <a class="btn btn-ghost" href="https://github.com/mhd-alto" target="_blank" rel="noopener">github.com/mhd-alto</a>
+              <a class="btn btn-ghost" href="https://linkedin.com/in/mohammad-altonji-4b5511247" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-stack reveal">
+        <div class="stat-card">
+          <div class="k">45<small>×</small></div>
+          <div class="d">faster search response times after redesigning query logic + PostgreSQL indexing for a high-traffic medical platform</div>
+        </div>
+        <div class="stat-card">
+          <div class="k">3<small>+ yrs</small></div>
+          <div class="d">building and operating backend systems in production environments</div>
+        </div>
+        <div class="stat-card">
+          <div class="k">100<small>%</small></div>
+          <div class="d">capstone project completion rate mentoring full-stack Django cohorts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="log">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">01 / log</span>
+      <h2 class="sec-title">Experience</h2>
+    </div>
+
+    <div class="log">
+      <div class="entry reveal">
+        <div class="entry-head">
+          <span class="entry-time">JAN 2024 — DEC 2025</span>
+          <span class="entry-role">Backend Engineer</span>
+          <span class="entry-org">@ DataMed</span>
+          <span class="entry-loc">Damascus, Syria (on-site)</span>
+        </div>
+        <ul>
+          <li>Diagnosed a critical search bottleneck on a high-traffic medical data platform; redesigned query logic and added strategic PostgreSQL indexing — cut response times by 45x and unlocked enterprise-scale clients.</li>
+          <li>Paired ElasticSearch with GDAL to add geospatial search, giving healthcare providers location-based analytics across Syria for the first time.</li>
+          <li>Containerized the full application suite with Docker across dev, staging, and production — removed environment drift and cut deployment incidents.</li>
+          <li>Designed encrypted WireGuard VPN tunnels for internal traffic, protecting sensitive medical data to security best practice.</li>
+          <li>Built a version-control system inside Django to manage Flutter mobile release channels, letting the team ship updates without store re-submissions.</li>
+          <li>Deployed and ran self-hosted Jira and Taiga via Docker to support structured sprint planning team-wide.</li>
+        </ul>
+      </div>
+
+      <div class="entry reveal">
+        <div class="entry-head">
+          <span class="entry-time">2023 — 2024</span>
+          <span class="entry-role">Full Stack Developer</span>
+          <span class="entry-org">@ Simdco</span>
+          <span class="entry-loc">Damascus, Syria (on-site)</span>
+        </div>
+        <ul>
+          <li>Worked directly with tourism-sector stakeholders to turn complex requirements into a scalable web app — delivered on time with zero critical post-launch defects.</li>
+          <li>Built automated CI/CD pipelines on custom Linux servers, cutting deployment time from hours to minutes with zero-downtime releases.</li>
+          <li>Developed responsive, mobile-first interfaces in HTML, CSS, and JavaScript aligned to stakeholder UX goals.</li>
+        </ul>
+      </div>
+
+      <div class="entry reveal">
+        <div class="entry-head">
+          <span class="entry-time">2024</span>
+          <span class="entry-role">Web Development Trainer</span>
+          <span class="entry-org">Freelance</span>
+        </div>
+        <ul>
+          <li>Mentored cohorts through full-stack Django projects, from schema design to cloud deployment — 100% project completion rate.</li>
+          <li>Directed production-grade capstones (Car Store App, Solar System Store App) covering API design, data modeling, and deployment.</li>
+        </ul>
+      </div>
+
+      <div class="entry reveal">
+        <div class="entry-head">
+          <span class="entry-time">2023 — PRESENT</span>
+          <span class="entry-role">Volunteer Web Developer</span>
+          <span class="entry-org">@ Syrian Astronomy Association</span>
+          <span class="entry-loc">Damascus, Syria</span>
+        </div>
+        <ul>
+          <li>Designed and launched interactive educational platforms in Django to promote scientific literacy, serving hundreds of astronomy and science enthusiasts.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">02 / stack</span>
+      <h2 class="sec-title">What I build with</h2>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-cell">
+        <h4>Backend &amp; APIs</h4>
+        <div class="pillrow">
+          <span class="pill">Python</span><span class="pill">Django</span><span class="pill">DRF</span>
+          <span class="pill">Node.js</span><span class="pill">Express</span><span class="pill">NestJS</span>
+          <span class="pill">RESTful APIs</span><span class="pill">Webhooks</span><span class="pill">Event-driven arch.</span>
+        </div>
+      </div>
+      <div class="stack-cell">
+        <h4>Databases &amp; Search</h4>
+        <div class="pillrow">
+          <span class="pill">PostgreSQL</span><span class="pill">ElasticSearch</span><span class="pill">Redis</span>
+          <span class="pill">Query optimization</span><span class="pill">Spatial indexing</span>
+        </div>
+      </div>
+      <div class="stack-cell">
+        <h4>DevOps &amp; Infrastructure</h4>
+        <div class="pillrow">
+          <span class="pill">Docker</span><span class="pill">Linux</span><span class="pill">CI/CD</span>
+          <span class="pill">Nginx</span><span class="pill">WireGuard VPN</span><span class="pill">Self-hosted services</span>
+        </div>
+      </div>
+      <div class="stack-cell">
+        <h4>Frontend &amp; Full-Stack</h4>
+        <div class="pillrow">
+          <span class="pill">React</span><span class="pill">Next.js</span><span class="pill">MERN</span>
+          <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JavaScript</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="focus">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">03 / focus</span>
+      <h2 class="sec-title">Where I add the most value</h2>
+    </div>
+    <div class="focus-grid">
+      <div class="focus-card reveal">
+        <div class="ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5FE3C8" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h4>Performance &amp; debugging</h4>
+        <p>Finding the actual bottleneck — not the obvious guess — and fixing it at the root. Took one search endpoint from a liability to a 45x-faster asset.</p>
+      </div>
+      <div class="focus-card reveal">
+        <div class="ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5FE3C8" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <h4>Production infrastructure</h4>
+        <p>Docker, CI/CD, and Linux server administration that turns deployment from an event into a non-event. Zero-downtime, by design.</p>
+      </div>
+      <div class="focus-card reveal">
+        <div class="ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5FE3C8" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h4>Secure, sensitive data systems</h4>
+        <p>Built for a medical-data platform — WireGuard-encrypted internal networks, careful access boundaries, and infrastructure that respects what it's holding.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">04 / education</span>
+      <h2 class="sec-title">Education &amp; training</h2>
+    </div>
+    <div>
+      <div class="edu-row reveal">
+        <div>
+          <div class="edu-title">MERN Trainee — Bytes4Future</div>
+          <div class="edu-sub">MongoDB · Express · React · Node.js · Next.js · NestJS</div>
+        </div>
+        <div class="edu-time">2026 — Present</div>
+      </div>
+      <div class="edu-row reveal">
+        <div>
+          <div class="edu-title">B.Sc. Management Information Systems</div>
+          <div class="edu-sub">Syrian Virtual University (SVU)</div>
+        </div>
+        <div class="edu-time">2024 — Present</div>
+      </div>
+      <div class="edu-row reveal">
+        <div>
+          <div class="edu-title">Diploma in Programming Engineering</div>
+          <div class="edu-sub">Damascus University Techno College Computer Institute</div>
+        </div>
+        <div class="edu-time">2019 — 2022</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-box reveal">
+      <h2>Let's build something that scales.</h2>
+      <p>Open to backend and full-stack roles — especially teams that care about clean APIs, solid infrastructure, and systems that hold up under load.</p>
+      <div class="contact-links">
+        <a class="btn btn-primary" href="mailto:mouhammadaltonji@gmail.com">mouhammadaltonji@gmail.com</a>
+        <a class="btn btn-ghost" href="tel:+963981860308">+963 981 860 308</a>
+        <a class="btn btn-ghost" href="https://github.com/mhd-alto" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/mohammad-altonji-4b5511247" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Mohammad Altonji · Damascus, Syria · Arabic (native) · English (upper intermediate)</div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.12});
+  els.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
